@@ -9,6 +9,7 @@ import unittest
 from langchain.schema.runnable.base import RunnableSequence
 from langchain.llms import HuggingFaceEndpoint
 from langchain.schema.output_parser import StrOutputParser
+from langchain_community.chat_models import ChatHuggingFace
 from langchain_core.prompts import PromptTemplate
 from src.main.lab import get_basic_chain, basic_chain_invoke
 
@@ -58,16 +59,15 @@ def classify_relevancy(message, question):
     )
 
     model = HuggingFaceEndpoint(
-        endpoint_url=os.environ['HF_ENDPOINT'],
-        huggingfacehub_api_token=os.environ['HF_TOKEN'],
+        endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
+        huggingfacehub_api_token="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",
         task="text-generation",
         model_kwargs={
-            "max_new_tokens": 1024
+            "max_new_tokens": 200
         }
     )
-
-    chain = prompt_template | model | StrOutputParser()
-
+    chat_model = ChatHuggingFace(llm=model)
+    chain = prompt_template | chat_model | StrOutputParser()
     result = chain.invoke({"message": message, "question": question})
     print("Result: " + result)
     print(message)
