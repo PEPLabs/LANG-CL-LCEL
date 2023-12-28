@@ -4,7 +4,7 @@ from langchain_community.chat_models import ChatHuggingFace
 from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate
 
 token = os.environ.get("HF_TOKEN") # Ideally, we have this token set. Otherwise, replace with hardcoded HF token.
 API_URL = "https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud"
@@ -63,16 +63,14 @@ def classify_relevancy(message, question):
     bool: True if the message is relevant (i.e., it answers the question), False otherwise.
     """
     prompt = ChatPromptTemplate.from_messages([
-        SystemMessage(content="You are a chatbot who determines if a given message properly answers a question by "
+        SystemMessagePromptTemplate.from_template("You are a chatbot who determines if a given message properly answers a question by "
                               "replying 'yes' or 'no''."),
-        HumanMessage(
-            content="Does the following message answer the question: {question}? message: {message}"
+        HumanMessagePromptTemplate.from_template("Does the following message answer the question: {question}? message: {message}"
         ),
     ])
 
     chat_model = ChatHuggingFace(llm=llm)
     chain = prompt | chat_model | StrOutputParser()
-
     result = chain.invoke({"message": message, "question": question})
     print("Result: " + result)
     print(message)
