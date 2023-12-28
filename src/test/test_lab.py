@@ -3,14 +3,10 @@ This file will contain test cases for the automatic evaluation of your
 solution in lab/lab.py. You should not modify the code in this file. You should
 also manually test your solution by running main/app.py.
 """
-import os
 import unittest
 
 from langchain.schema.runnable.base import RunnableSequence
-from langchain.llms import HuggingFaceEndpoint
-from langchain.schema.output_parser import StrOutputParser
-from langchain_community.chat_models import ChatHuggingFace
-from langchain_core.prompts import PromptTemplate
+from langchain_core.outputs import LLMResult
 from src.main.lab import get_basic_chain, basic_chain_invoke
 from src.utilities.llm_testing_util import classify_relevancy, llm_wakeup, llm_connection_check
 
@@ -29,7 +25,7 @@ class TestLLMResponse(unittest.TestCase):
         """
         try:
             response = llm_connection_check()
-            print(response)
+            self.assertIsInstance(response, LLMResult)
         except Exception as e:
             if 'Bad Gateway' in str(e):
                 llm_wakeup()

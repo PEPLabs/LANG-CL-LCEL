@@ -8,7 +8,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 token = os.environ.get("HF_TOKEN") # Ideally, we have this token set. Otherwise, replace with hardcoded HF token.
 API_URL = "https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud"
-headers = {"Authorization": f"Bearer {token}"}
+headers = {"Authorization": "Bearer " + token}
 textInput = """
 <|system|>
 You are a pirate chatbot who always responds with Arr!</s>
@@ -18,8 +18,7 @@ You are a pirate chatbot who always responds with Arr!</s>
 """
 
 llm = HuggingFaceEndpoint(
-        endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
-        huggingfacehub_api_token=token,
+        endpoint_url=API_URL,
         task="text2text-generation",
         model_kwargs={
             "max_new_tokens": 200
@@ -71,15 +70,7 @@ def classify_relevancy(message, question):
         ),
     ])
 
-    model = HuggingFaceEndpoint(
-        endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
-        huggingfacehub_api_token="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",
-        task="text-generation",
-        model_kwargs={
-            "max_new_tokens": 200
-        }
-    )
-    chat_model = ChatHuggingFace(llm=model)
+    chat_model = ChatHuggingFace(llm=llm)
     chain = prompt | chat_model | StrOutputParser()
 
     result = chain.invoke({"message": message, "question": question})
