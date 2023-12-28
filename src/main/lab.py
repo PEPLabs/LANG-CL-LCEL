@@ -4,12 +4,14 @@ from langchain.llms import HuggingFaceEndpoint
 
 import os
 
+from langchain_community.chat_models import ChatHuggingFace
+
 # TODO: Complete this prompt to ask the model for general information on a {topic}:
 prompt_template = "{topic}"
 prompt = ChatPromptTemplate.from_template(prompt_template)
 
 model = HuggingFaceEndpoint(
-    endpoint_url=os.environ['HF_ENDPOINT'],
+    endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
     huggingfacehub_api_token=os.environ['HF_TOKEN'],
     task="text-generation",
     model_kwargs={
@@ -17,11 +19,12 @@ model = HuggingFaceEndpoint(
     }
 )
 
+chat_model = ChatHuggingFace(llm=model)
 
 # Use a simple output parser that converts output to a string
 output_parser = StrOutputParser()
 
-# TODO: Create/return a chain using the prompt, model, and output_parser
+# TODO: Create/return a chain using the prompt, chat_model, and output_parser
 # Make sure you use LCEL to achieve this. 
 # Hint: The function body can be as short as a single line
 def get_basic_chain():
