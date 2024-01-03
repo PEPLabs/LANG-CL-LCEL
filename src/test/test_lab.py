@@ -12,17 +12,17 @@ from src.utilities.llm_testing_util import classify_relevancy, llm_wakeup, llm_c
 
 
 class TestLLMResponse(unittest.TestCase):
-
+    """
+    This function is a sanity check for the Language Learning Model (LLM) connection.
+    It attempts to generate a response from the LLM. If a 'Bad Gateway' error is encountered,
+    it initiates the LLM wake-up process. This function is critical for ensuring the LLM is
+    operational before running tests and should not be modified without understanding the
+    implications.
+    Raises:
+        Exception: If any error other than 'Bad Gateway' is encountered, it is raised to the caller.
+    """
     def test_llm_sanity_check(self):
-        """
-        This function is a sanity check for the Language Learning Model (LLM) connection.
-        It attempts to generate a response from the LLM. If a 'Bad Gateway' error is encountered,
-        it initiates the LLM wake-up process. This function is critical for ensuring the LLM is
-        operational before running tests and should not be modified without understanding the
-        implications.
-        Raises:
-            Exception: If any error other than 'Bad Gateway' is encountered, it is raised to the caller.
-        """
+
         try:
             response = llm_connection_check()
             self.assertIsInstance(response, LLMResult)
