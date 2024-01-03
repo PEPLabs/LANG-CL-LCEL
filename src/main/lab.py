@@ -10,16 +10,15 @@ from langchain_community.chat_models import ChatHuggingFace
 prompt_template = "{topic}"
 prompt = ChatPromptTemplate.from_template(prompt_template)
 
-model = HuggingFaceEndpoint(
-    endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
-    huggingfacehub_api_token=os.environ['HF_TOKEN'],
+llm = HuggingFaceEndpoint(
+    endpoint_url=os.environ['LLM_ENDPOINT'],
     task="text-generation",
     model_kwargs={
         "max_new_tokens": 1024
     }
 )
 
-chat_model = ChatHuggingFace(llm=model)
+chat_model = ChatHuggingFace(llm=llm)
 
 # Use a simple output parser that converts output to a string
 output_parser = StrOutputParser()
